@@ -19,16 +19,32 @@ var errReadingInput = errors.New("Error reading input")
 
 func main() {
 	assertArgsValid()
-	originUnit := strings.ToUpper(os.Args[1])
+	originUnit = strings.ToUpper(os.Args[1])
 	for {
 		fmt.Print("What is the current temperature in " + originUnit + " ? ")
+		_, err := fmt.Scanln(&originValue)
+		assertInputValid(err)
+		if originUnit == "C" {
+			convertToFahrenheit(originValue)
+		} else {
+			convertToCelsius(originValue)
+		}
 
 		fmt.Print("Would you like to convert another temperature ? (y/n) ")
+		_, err = fmt.Scanln(&shouldConvertAgain)
+		shouldConvertAgain = strings.ToUpper(shouldConvertAgain)
+		assertInputValid(err)
 
 		if shouldConvertAgain != "Y" {
 			fmt.Println("Good bye!")
 			break
 		}
+	}
+}
+
+func assertInputValid(err error) {
+	if err != nil {
+		printError(errReadingInput)
 	}
 }
 
